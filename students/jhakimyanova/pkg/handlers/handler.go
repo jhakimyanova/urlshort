@@ -2,7 +2,15 @@ package handlers
 
 import (
 	"net/http"
+
+	"gopkg.in/yaml.v2"
 )
+
+// PathURL is representing a member of the list in provided YAML file
+type PathURL struct {
+	Path string
+	URL  string
+}
 
 // MapHandler will return an http.HandlerFunc (which also
 // implements http.Handler) that will attempt to map any
@@ -36,7 +44,25 @@ func MapHandler(pathsToUrls map[string]string, fallback http.Handler) http.Handl
 //
 // See MapHandler to create a similar http.HandlerFunc via
 // a mapping of paths to urls.
-func YAMLHandler(yml []byte, fallback http.Handler) (http.HandlerFunc, error) {
-	// TODO: Implement this...
-	return nil, nil
+func YAMLHandler(yamlData []byte, fallback http.Handler) (http.HandlerFunc, error) {
+	pathsUrls, err := parseYAML(yamlData)
+	if err != nil {
+		return nil, err
+	}
+	pathURLMap := buildMap(pathsUrls)
+	return MapHandler(pathURLMap, fallback), nil
+}
+
+func parseYAML(yamlData []byte) ([]PathURL, error) {
+	pathsUrls := []PathURL{}
+	err := yaml.Unmarshal(yamlData, &pathsUrls)
+	return pathsUrls, err
+}
+
+func buildMap(pathsUrls []PathURL) map[string]string {
+	pathURLMap := make(map[string]string)
+	for _, pu := range pathsUrls {
+		pathURLMap[pu.Path] = pu.URL
+	}
+	return pathURLMap
 }
