@@ -56,7 +56,11 @@ func YAMLHandler(yamlData []byte, fallback http.Handler) (http.HandlerFunc, erro
 func parseYAML(yamlData []byte) ([]pathURL, error) {
 	pathsUrls := []pathURL{}
 	err := yaml.Unmarshal(yamlData, &pathsUrls)
-	return pathsUrls, err
+	// Make sure that the first part returned is nil in case of error:
+	if err != nil {
+		return nil, err
+	}
+	return pathsUrls, nil
 }
 
 func buildMap(pathsUrls []pathURL) map[string]string {
