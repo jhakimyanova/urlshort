@@ -6,8 +6,8 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-// PathURL is representing a member of the list in provided YAML file
-type PathURL struct {
+// pathURL is representing a member of the list in provided YAML file
+type pathURL struct {
 	Path string
 	URL  string
 }
@@ -53,13 +53,13 @@ func YAMLHandler(yamlData []byte, fallback http.Handler) (http.HandlerFunc, erro
 	return MapHandler(pathURLMap, fallback), nil
 }
 
-func parseYAML(yamlData []byte) ([]PathURL, error) {
-	pathsUrls := []PathURL{}
+func parseYAML(yamlData []byte) ([]pathURL, error) {
+	pathsUrls := []pathURL{}
 	err := yaml.Unmarshal(yamlData, &pathsUrls)
 	return pathsUrls, err
 }
 
-func buildMap(pathsUrls []PathURL) map[string]string {
+func buildMap(pathsUrls []pathURL) map[string]string {
 	pathURLMap := make(map[string]string)
 	for _, pu := range pathsUrls {
 		pathURLMap[pu.Path] = pu.URL
