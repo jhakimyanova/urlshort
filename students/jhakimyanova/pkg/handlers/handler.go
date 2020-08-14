@@ -8,8 +8,8 @@ import (
 
 // pathURL is representing a member of the list in provided YAML file
 type pathURL struct {
-	Path string
-	URL  string
+	Path string `yaml:"path"`
+	URL  string `yaml:"url"`
 }
 
 // MapHandler will return an http.HandlerFunc (which also
