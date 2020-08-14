@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -10,6 +11,9 @@ import (
 )
 
 func main() {
+	// Receiving yaml file name from a flag:
+	yamlFile := flag.String("yaml", "pathsToUrls.yaml", "YAML file mapping PATHs and URLs")
+	flag.Parse()
 	mux := defaultMux()
 
 	// Build the MapHandler using the mux as the fallback
@@ -20,9 +24,7 @@ func main() {
 	mapHandler := handlers.MapHandler(pathsToUrls, mux)
 
 	// Build the YAMLHandler using the mapHandler as the fallback
-	// TODO: accept yaml file as a flag:
-	yamlFile := "pathsToUrls.yaml"
-	yamlData, err := ioutil.ReadFile(yamlFile)
+	yamlData, err := ioutil.ReadFile(*yamlFile)
 	if err != nil {
 		log.Fatal(err)
 	}
